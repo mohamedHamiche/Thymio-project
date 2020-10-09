@@ -29,8 +29,11 @@ Entrainement sur 9 pistes.
 **Différents états:**
 
 1)Suivre une direction
+
 2)Lire un code barre
+
 3)Arret
+
 4)Tirer la balle de la partie arrière du robot 
 
 
