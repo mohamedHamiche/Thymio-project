@@ -8,9 +8,7 @@ __________________________________________________
 **Liste des actions que le robot doit savoir faire:**
 
 Suivre la ligne
-
 Lire code barre
-
 Suivre la direction(sur une certaine distance)
 
 Lire code barre
