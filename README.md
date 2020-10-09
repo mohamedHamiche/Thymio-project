@@ -32,9 +32,11 @@ Entrainement sur 9 pistes.
 
 2)Lire un code barre
 
-3)Arret
+3)Changer de direction
 
-4)Tirer la balle de la partie arrière du robot 
+4)Arret
+
+5)Tirer la balle de la partie arrière du robot 
 
 
 
