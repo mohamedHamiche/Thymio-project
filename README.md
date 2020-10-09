@@ -36,7 +36,7 @@ Entrainement sur 9 pistes.
 
 4)Arret
 
-5)Tirer la balle de la partie arrière du robot 
+5)Tirer la balle de la partie arrière du robot (dans certains cas plus sur ?)
 
 
 
