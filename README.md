@@ -3,25 +3,48 @@
 ## Objectif du projet
 
 Le robot va jouer à la place de *Jack Nicklaus* :)
+
 __________________________________________________
+
+Entrainement sur 9 pistes.
 
 **Liste des actions que le robot doit savoir faire:**
 
-Suivre la ligne
+`Suivre la ligne`
 
-Lire code barre
+`Lire code barre`
 
-Suivre la direction(sur une certaine distance)
+`Suivre la direction(sur une certaine distance)`
 
-Lire code barre
+`Lire code barre`
 
-Arret
+`Arret`
 
-Ajustement du robots(direction)
+`Ajustement du robots(direction)`
 
 `Suivre la nouvelle direction jusqu'au trou`
 
-Entrainement sur 9 pistes.
+
+
+**Différents états:**
+
+1)Suivre une direction
+2)Lire un code barre
+3)Arret
+4)Tirer la balle de la partie arrière du robot 
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 **Problèmes éventuels:**
 
