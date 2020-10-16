@@ -55,7 +55,10 @@ Entrainement sur 9 pistes.
 
 Lors du choix de la nouvelle direction le robot doit bien ajuster sa nouvelle trajectoire il faudra donc donner des instructions précises.
 
-
+// CALIBRAGE 16/10/2020 
+sur une distance de 40cm :
+    avec une vitesse de 100 -->11sec
+    avec une vitesse de 200 -->6.2sec
 
 
 
