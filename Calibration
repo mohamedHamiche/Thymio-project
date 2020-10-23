@@ -32,5 +32,5 @@ call leds.bottom.left(0,0,15)
 
 end
 
-<h1>Comment fonctionne le programme pour parcourir une distance de 10cm, 20cm ou 40 cm et comment l'utiliser ?<h1>
+<h1>Comment fonctionne le programme pour parcourir une distance de 10cm, 20cm ou 40 cm et comment l'utiliser ?</h1>
 
