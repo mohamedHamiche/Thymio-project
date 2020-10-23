@@ -34,3 +34,8 @@ end
 
 ## Comment fonctionne le programme pour parcourir une distance de 10cm, 20cm ou 40 cm et comment l'utiliser ?
 
+Le programme est relativement simple pour le moment pusique nous utilisons pour l'instant aucun état, seulement avec des conditions if-else et des onevent ça nous a permis de calculer la vitesse en m/s.
+Il y a une première `condition if` qui permet de passer à une valeur de 500 (par exemple dans le programme ci-dessus) si les capteurs captent du noir qui est correspond à 0 pour les valeurs : `prox.ground.ambiant[0]` & `prox.ground.ambiant[1]`.
+La condition else permet au robot de s'arrêter lorsque ces valeurs ne sont plus égales à 0
+
+
