@@ -35,7 +35,9 @@ end
 ## Comment fonctionne le programme pour parcourir une distance de 10cm, 20cm ou 40 cm et comment l'utiliser ?
 
 Le programme est relativement simple pour le moment pusique nous utilisons pour l'instant aucun état, seulement avec des conditions if-else et des onevent ça nous a permis de calculer la vitesse en m/s.
-Il y a une première `condition if` qui permet de passer à une valeur de 500 (par exemple dans le programme ci-dessus) si les capteurs captent du noir qui est correspond à 0 pour les valeurs : `prox.ground.ambiant[0]` & `prox.ground.ambiant[1]`.
-La condition else permet au robot de s'arrêter lorsque ces valeurs ne sont plus égales à 0
+Il y a une première `condition if` qui permet de passer à une valeur de 500 (par exemple dans le programme ci-dessus) si les capteurs captent du noir qui correspond à 0 pour les valeurs : `prox.ground.ambiant[0]` & `prox.ground.ambiant[1]`.
+La condition else permet au robot de s'arrêter lorsque ces valeurs ne sont plus égales à 0.
+Ainsi nous avons notre robot qui parcours une distance tant qu'il capte la bande noire.
+nous avons aussi une variable cptt qui nous permet ici d'incrémenter toutes les 100 ms tant que la première condition if est vraie, ainsi en divisant par 10 cette valeur nous avons le temps en secondes que le robot à mis pour parcourir la bande noire et comme nous connaissons la distance qui est ici de 40 cm soit 0.4m  nous pouvons déterminer la vitesse grace à la relation `v = d/s`.
 
 
