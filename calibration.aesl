@@ -48,37 +48,3 @@ onevent button.center
 	emit compteur cptt
 	etat = 2</node>
 
-
-<!--node Thymio sur DESKTOP-2S84V7V - 2092-->
-<node name="Thymio sur DESKTOP-2S84V7V - 2092" nodeId="0">#Nous allons créer une fonction pour que thymio suive une ligne
-var prox1
-var speed =400
-#a calibrer
-var grey_edge=100
-var black_edge=600
-var mean = (grey_edge+black_edge)/2
-
-var decalage
-
-onevent prox
-	prox1=prox.ground.delta[1]
-	#on cherche a avoir de quoi "décaler"
-	decalage=prox1-mean
-	if  decalage > -100 and decalage &lt;100 then
-	#on avance tranquille full speed
-		 motor.left.target=speed
-		 motor.right.target=speed
-	elseif decalage &lt;-100 then
-	#decalage vers la droite,on retourne vers le blanc
-		 motor.left.target=speed+(decalage/2)
-		 motor.right.target=speed
-	elseif decalage>100 then
-	#decalage vers la gauche,on retourne dans le noir
-		 motor.left.target=speed
-		 motor.right.target=speed-(decalage/2)
-		
-	end
-</node>
-
-
-</network>
