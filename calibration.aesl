@@ -38,10 +38,10 @@ onevent prox
 		call leds.bottom.left(15,0,15)
 		cptt++
     else
-        etat = 1
-        motor.left.target = 200
-		motor.right.target = 200
-		cptt++
+        
+        motor.left.target = 50
+		motor.right.target = 50
+	
     end
 
 onevent button.center  
