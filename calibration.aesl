@@ -1,0 +1,84 @@
+<!DOCTYPE aesl-source>
+<network>
+
+
+<!--list of global events-->
+<event name="compteur" size="1"/>
+
+
+<!--list of constants-->
+
+
+<!--show keywords state-->
+<keywords flag="true"/>
+
+
+<!--node thymio-II-->
+<node name="thymio-II" nodeId="1">var cptt
+var etat
+#timer.period[0] = 1000000
+#onevent timer0
+call leds.bottom.left(15,0,15)
+call leds.bottom.left(15,0,15)
+motor.left.target = 100
+motor.right.target = 100
+cptt=0
+etat = 0
+onevent prox
+    if etat == 2 then
+		motor.left.target = 0
+		motor.right.target = 0
+    elseif etat == 1 then
+		motor.left.target = 100
+		motor.right.target = 100
+    elseif prox.ground.reflected[0] > 200 then
+        etat = 0
+        motor.left.target = 100
+		motor.right.target = 100
+		call leds.bottom.left(15,0,15)
+		cptt++
+    else
+        etat = 1
+        motor.left.target = 200
+		motor.right.target = 200
+		cptt++
+    end
+
+onevent button.center  
+	emit compteur cptt
+	etat = 2</node>
+
+
+<!--node Thymio sur DESKTOP-2S84V7V - 2092-->
+<node name="Thymio sur DESKTOP-2S84V7V - 2092" nodeId="0">#Nous allons créer une fonction pour que thymio suive une ligne
+var prox1
+var speed =400
+#a calibrer
+var grey_edge=100
+var black_edge=600
+var mean = (grey_edge+black_edge)/2
+
+var decalage
+
+onevent prox
+	prox1=prox.ground.delta[1]
+	#on cherche a avoir de quoi "décaler"
+	decalage=prox1-mean
+	if  decalage > -100 and decalage &lt;100 then
+	#on avance tranquille full speed
+		 motor.left.target=speed
+		 motor.right.target=speed
+	elseif decalage &lt;-100 then
+	#decalage vers la droite,on retourne vers le blanc
+		 motor.left.target=speed+(decalage/2)
+		 motor.right.target=speed
+	elseif decalage>100 then
+	#decalage vers la gauche,on retourne dans le noir
+		 motor.left.target=speed
+		 motor.right.target=speed-(decalage/2)
+		
+	end
+</node>
+
+
+</network>
