@@ -1,0 +1,42 @@
+<!DOCTYPE aesl-source>
+<network>
+
+
+<!--list of global events-->
+<constant name="GrisIdeal" value="300"/>
+<constant name="Seuil" value="150"/>
+<constant name="vitesse" value="300"/>
+<constant name="vitesseMax" value="400"/>
+
+
+<!--node Thymio sur DESKTOP-782PLEO - 8016-->
+<node name="Thymio sur DESKTOP-782PLEO - 8016" nodeId="{5197c30c-f608-4cfd-b4fc-c349850625c8}"><![CDATA[var val #valeur du capteur
+var delta #asservissement
+
+
+onevent prox
+
+
+val=prox.ground.delta[1]
+delta =(val-GrisIdeal)/2
+
+
+if ( val <GrisIdeal-Seuil) then   # trop sombre, aller à gauche
+motor.left.target	 =vitesse	 -delta
+motor.right.target =vitesse +delta
+call leds.bottom.left(30,20,0)
+
+elseif ( val >GrisIdeal+Seuil) then   # trop claire, aller à droite
+motor.left.target	 =vitesse	 +delta
+motor.right.target =  vitesse -delta
+call leds.bottom.right(30,20,0)
+
+else
+motor.left.target	=vitesseMax	#en avant toutes
+motor.right.target=vitesseMax
+call leds.top(0,30,5)
+
+end]]></node>
+
+
+</network>
