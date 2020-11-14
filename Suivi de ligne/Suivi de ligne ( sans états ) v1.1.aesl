@@ -1,0 +1,69 @@
+#suivi de ligne version Beta 
+
+<!DOCTYPE aesl-source>
+<network>
+
+
+<!--list of global events-->
+<constant name="proxInf" value="290"/>
+<constant name="proxSup" value="480"/>
+<constant name="vitesseMax" value="280"/>
+<constant name="vitesseRotation" value="50"/>
+
+
+<!--node Thymio sur DESKTOP-782PLEO - 9696-->
+<node name="Thymio sur DESKTOP-782PLEO - 9696" nodeId="{1546f153-db17-41ca-b1c4-d31348355539}"><![CDATA[
+    
+    
+
+var val #valeur du capteur
+
+
+onevent prox
+
+val=prox.ground.delta[0]
+
+
+if 		 val < 	proxInf	then   # trop sombre, aller à gauche
+
+		motor.left.target	 =	-vitesseRotation
+
+		motor.right.target = vitesseRotation   #50
+
+call leds.bottom.left(30,20,0)
+
+call leds.bottom.right(0,0,0)
+
+call leds.top(0,0,0)
+
+
+elseif 	 val >   proxSup  	 then   # trop claire, aller à droite
+
+		motor.left.target	 =	 vitesseRotation #50
+
+		motor.right.target =   -vitesseRotation
+
+call leds.bottom.right(30,20,0)
+
+call leds.bottom.left(0,0,0)
+
+call leds.top(0,0,0)
+
+else 
+
+		motor.left.target	 =vitesseMax	#280
+
+		motor.right.target =  vitesseMax
+
+call leds.bottom.right(0,0,0)
+
+call leds.bottom.left(0,0,0)
+
+call leds.top(0,30,5)
+
+end
+
+]]></node>
+
+
+</network>
