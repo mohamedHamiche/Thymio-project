@@ -1,0 +1,144 @@
+<!DOCTYPE aesl-source>
+<network>
+
+
+<!--list of global events-->
+<constant name="proxInf" value="290"/>
+<constant name="proxSup" value="480"/>
+<constant name="vitesseMax" value="280"/>
+<constant name="vitesseRotation" value="50"/>
+
+
+<!--node Thymio sur DESKTOP-782PLEO - 9136-->
+<node name="Thymio sur DESKTOP-782PLEO - 9136" nodeId="{c2631109-cd8b-4031-8172-4525c8294309}"><![CDATA[
+
+
+
+#comment ca marche ? 
+#quand on appuie sur button.forward le robot se dirige vers une ligne et fait le tour complet du circuit
+#on peut l'arreter avec button.center et changer sa direction avec les autres bouttons
+
+
+
+var val #valeur du capteur
+
+var etat
+
+
+onevent prox
+
+val=prox.ground.delta[0]
+
+
+if val>proxInf and val <proxSup then
+
+	etat=2
+
+end
+
+
+if  etat==2 then  #faire le suivi de ligne
+	
+
+
+if 		 val < 	proxInf	then   # trop sombre, aller à gauche
+
+		motor.left.target	 =	-vitesseRotation
+
+		motor.right.target = vitesseRotation
+
+call leds.bottom.left(30,20,0)
+
+call leds.bottom.right(0,0,0)
+
+call leds.top(0,0,0)
+
+
+elseif 	 val >   proxSup  	 then   # trop claire, aller à droite
+
+		motor.left.target	 =	 vitesseRotation #50
+
+		motor.right.target =   -vitesseRotation
+
+call leds.bottom.right(30,20,0)
+
+call leds.bottom.left(0,0,0)
+
+call leds.top(0,0,0)
+
+else 
+
+		motor.left.target	 =vitesseMax	#280
+
+		motor.right.target =  vitesseMax
+
+call leds.bottom.right(0,0,0)
+
+call leds.bottom.left(0,0,0)
+
+call leds.top(0,30,5)
+
+end
+
+end
+
+
+#commandes manuelles :
+
+onevent button.forward    #marche avant 
+	
+	
+	motor.left.target	 =	200
+	
+	motor.right.target = 200
+	
+call leds.bottom.left(0,0,0)
+
+call leds.bottom.right(0,0,0)
+
+call leds.top(30,0,10)
+	
+onevent button.center #arret manuel
+	
+	etat=1
+	if etat==1 then
+		
+	
+	motor.left.target	 =	0
+	
+	motor.right.target = 0
+	
+call leds.bottom.left(0,0,0)
+
+call leds.bottom.right(0,0,0)
+
+call leds.top(30,0,0)
+	
+	end
+
+
+
+onevent button.left #tourner vers la gauche
+
+     motor.left.target = - 200
+	 
+	 motor.right.target = 200
+	 
+	 call leds.top(10,0,30)
+
+onevent button.right #tourner vers la droite
+   
+     motor.left.target =  200
+     
+     motor.right.target = -  200
+		
+	call leds.top(10,0,30)	
+		
+onevent button.backward #marche arrière
+ 
+     motor.left.target =  -300
+	 
+	 motor.right.target = - 300]]></node>
+
+
+</network>
