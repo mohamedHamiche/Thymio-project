@@ -1,0 +1,98 @@
+#calibrage du robot
+
+<!DOCTYPE aesl-source>
+<network>
+
+
+<!--list of global events-->
+<event name="compteur" size="1"/>
+<constant name="vitesse" value="400"/>
+
+
+<!--node Thymio sur DESKTOP-782PLEO - 2692-->
+<node nodeId="{aa2cfdef-f397-46ad-99db-81b5c727bda4}" name="Thymio sur DESKTOP-782PLEO - 2692"><![CDATA[
+    
+
+var cptt
+
+var etat
+
+cptt=0
+
+etat = 2
+
+onevent prox
+
+        if etat == 2 then
+	
+		motor.left.target = 0
+
+		motor.right.target = 0
+		
+     	call leds.top(30,0,0) #rouge STOP
+    
+    elseif etat == 1 and prox.ground.reflected[0] > 200 then
+		
+		motor.left.target = vitesse
+		
+		motor.right.target = vitesse
+		
+		call leds.top(0,30,15)
+    
+    
+    elseif  prox.ground.reflected[0] < 200 then    #c'est noir
+    
+     	etat=0
+     
+        motor.left.target = vitesse
+		
+		motor.right.target = vitesse
+		
+		call leds.top(30,0,15)
+		
+		cptt++
+    
+    else 
+       
+        etat=2				#STOP en sortant de la zone    
+		
+		emit compteur  cptt  # retourner le temps 
+     	
+     	cptt=0 #remise à 0 de la variable
+ 
+    end
+
+
+onevent button.forward  #marche avant 
+		
+		etat=1
+
+
+onevent button.center #arret manuel
+	
+	etat = 2
+
+
+onevent button.left #tourner un peu vers la gauche
+
+     motor.left.target = - 50
+	 
+	 motor.right.target = 50
+
+onevent button.right #tourner un peu vers la droite
+   
+     motor.left.target =  50
+     
+     motor.right.target = -  50
+		
+		
+onevent button.backward #marche arrière 
+ 
+     motor.left.target =  -300
+	 
+	 motor.right.target = - 300
+		
+]]></node>
+
+
+</network>
