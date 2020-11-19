@@ -32,7 +32,7 @@ val=prox.ground.delta[0]
 
 if val>proxInf and val <proxSup then
 
-	etat=2
+	etat=2  #suivre la ligne
 
 end
 
@@ -41,7 +41,7 @@ if  etat==2 then  #faire le suivi de ligne
 	
 
 
-if 		 val < 	proxInf	then   # trop sombre, aller à gauche
+if 		 val > 	proxSup	then   # trop claire, aller à gauche
 
 		motor.left.target	 =	-vitesseRotation
 
@@ -54,7 +54,7 @@ call leds.bottom.right(0,0,0)
 call leds.top(0,0,0)
 
 
-elseif 	 val >   proxSup  	 then   # trop claire, aller à droite
+elseif 	 val <   proxInf 	 then   # trop sombre, aller à droite
 
 		motor.left.target	 =	 vitesseRotation #50
 
