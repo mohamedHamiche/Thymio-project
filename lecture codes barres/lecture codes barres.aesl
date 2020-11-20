@@ -1,17 +1,4 @@
-<!DOCTYPE aesl-source>
-<network>
 
-
-<!--list of global events-->
-<event size="3" name="bits"/>
-<constant value="290" name="proxInf"/>
-<constant value="480" name="proxSup"/>
-<constant value="100" name="vitesseMax"/>
-<constant value="36" name="vitesseRotation"/>
-
-
-<!--node Thymio sur DESKTOP-782PLEO - 6028-->
-<node name="Thymio sur DESKTOP-782PLEO - 6028" nodeId="{39a37965-47a5-40fb-b5ac-8679b14bba75}"><![CDATA[
 #comment ca marche ? 
 
 #quand on appuie sur button.forward le robot se dirige vers une ligne et fait le tour complet du circuit en changeant de couleur aprés chaque lectude de code barre 
@@ -46,7 +33,7 @@ tmpBit1=8
 
 tmpBit2=tmpBit1+6
 
-tmpBit3=tmpBit2+6
+tmpBit3=tmpBit2+5
 
 lecture=0
 
@@ -54,7 +41,7 @@ lecture=0
 
 sub allumer
 
-nombre_lu= bit1+2*bit2+4*bit3
+nombre_lu=4* bit1+2*bit2+bit3
 
 if nombre_lu==0 then
 	
@@ -74,13 +61,13 @@ if nombre_lu==1 then
 	
 	end
 	
-	if nombre_lu==3 then
+	if nombre_lu==4 then
 	
 	call leds.top(0,0,32)
 	
 	end
 	
-	if nombre_lu==4 then
+	if nombre_lu==3 then
 	
 	call leds.top(20,20,0)
 	
@@ -98,7 +85,6 @@ if nombre_lu==1 then
 	
 	end
 	
-
 
 	
 #######fin sub allumer
@@ -131,7 +117,7 @@ if val>proxInf and val <proxSup  then
 	
 	end
 
-if  val1<750   and   lecture==0 then #on est dans le noir et y a pas de code en cours alors c'est un nouveau code 
+if  val1<900   and   lecture==0 then #on est dans le noir et y a pas de code en cours alors c'est un nouveau code 
 
 	amorce=1   #nouvel amorce 
 
@@ -141,43 +127,48 @@ if  amorce==1 then  #si nouvel amorce alors
 	
 	lecture++  #on déclenche le compteur du temps 
 	
+				if lecture==3 then
+					bit1=0 bit2 =0 bit3=0 
+				end
+	
 			if  lecture ==tmpBit1 then  #si le temps est egal a tmpBit1 le robot est dans le 1er bit de valeurs 
-
-				if val1<750 then  #on pioche la valeur du bit1 
+				
+				if val1<900 then  #on pioche la valeur du bit1 
+				
+				bit1=0  #si noir
+					call leds.circle(32,32,32,32,32,32,32,32)
+				else 
+				
+				bit1=1 #si blanc
 			
-            	bit1=0  #si noir
+				end
 			
-            	else 
-			
-            	bit1=1 #si blanc
-			
-            	end
 			end
 			
 			if  lecture ==tmpBit2 then  #le robot est sur le bit2
 			
-            	if val1<750 then
+					if val1<900 then
+				
+				bit2=0  
+					call leds.circle(32,32,32,32,32,32,32,32)
+				else 
+				
+				bit2=1
+				
+				end
 			
-            	bit2=0  
-			
-            	else 
-			
-            	bit2=1
-			
-            	end
-			
-            end
+			end
 			
 			if  lecture ==tmpBit3 then  #le robot est sur le bit3
 			
-					if val1<750 then
+					if val1<900 then
 				
 				bit3=0 
-				
+				call leds.circle(32,32,32,32,32,32,32,32)
 				else 
 				
 				bit3=1
-				
+					
 				end
 			
 			end
@@ -199,7 +190,6 @@ emit bits[bit1 ,bit2 ,bit3 ]
 
 
 ####################################  suivi de ligne 
-
 if  etat==2 then  #faire le suivi de ligne
 	
 
@@ -212,8 +202,10 @@ if 		 val > 	proxSup	then   # trop sombre, aller à droite
 		
 call leds.circle(0,0,0,0,0,0,32,32)
 
+##########si ca tourne on arrete de compter effacer les # 
 
-tmp=0 #si ca tourne on arrete de compter
+
+tmp=0 
 
 if lecture>0 then
 	
@@ -234,7 +226,10 @@ elseif 	 val <   proxInf  	 then   # trop claire, aller à gauche
 
 call leds.circle(0,32,32,0,0,0,0,0)
 
-tmp=0 #si ca tourne on arrete de compter
+
+########si ca tourne on arrete de compter effacer les # 
+
+tmp=0
 
 if lecture>0 then
 	
@@ -245,6 +240,7 @@ lecture=lecture+tmp
 
 end
 
+######
 
 else 
 
@@ -261,7 +257,6 @@ call leds.circle(32,32,0,0,0,0,0,32)
 end
 
 end
-
 ########################### fin suivi de ligne
 
 
@@ -325,8 +320,3 @@ onevent button.backward #marche arrière
      motor.left.target =  -300
 	 
 	 motor.right.target = - 300
-     
-     ]]></node>
-
-
-</network>
