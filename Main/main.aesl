@@ -1,0 +1,452 @@
+<!DOCTYPE aesl-source>
+<network>
+
+
+<!--list of global events-->
+<event name="bits" size="3"/>
+<event name="bits22" size="3"/>
+<event name="chrono" size="0"/>
+<constant name="VitesseDeFrappe" value="300"/>
+<constant name="proxInf" value="290"/>
+<constant name="proxSup" value="480"/>
+
+
+<!--node Thymio sur DESKTOP-782PLEO - 11848-->
+<node name="Thymio sur DESKTOP-782PLEO - 11848" nodeId="{21edfd89-dbc6-4d54-a200-2db78a301b83}"><![CDATA[#Jack Nicklaus
+
+
+var vitesse 
+var vitesseR #vitesse rotation
+var val #valeur du capteur prox.ground.delta[0]
+var val1 #valeur du capteur prox.ground.delta[1]
+var etat #si == 2 on suit la ligne 
+var bit1 var bit2 var bit3   #valeur de chaque bit 0 ou 1 
+var bit5 var bit6 var bit7
+var tmpCode #temps qu'il faut pour parcourir un code barre=4*2.5cm=10cm 
+var tmpBit1 #temps dans lequel le robot est dans le premier bit  
+var tmpBit2   var tmpBit3 
+var lecture # va de 0 à la durée qu'il faut pour parcourir un code
+var nombre_lu 
+var amorce
+var numAmorce
+var tmp           var tmp1        #variable temporaire
+var chrono 
+var distance
+var vitesseRéel
+var angle 
+var tempsLu
+var L[8]=0,0,0,0,0,0,0,0
+var j    var tmpRotation  var rotation var s  var k
+var finSuiviDeLigne  var finDuGame
+var cptMarge var marge
+tempsLu=0
+vitesse=100
+vitesseR=35
+
+tmp1=0
+
+callsub initialisation
+
+sub initialisation 
+tmpCode=20
+tmpBit1=8
+tmpBit2=tmpBit1+6
+tmpBit3=tmpBit2+5
+lecture=0
+tempsLu=0
+etat=1
+bit1=0 bit2=0 bit3=0 bit5=0 bit6=0 bit7 =0
+numAmorce=0
+amorce=0
+j=0			k=0
+rotation=0
+tmpRotation=0
+finSuiviDeLigne=0
+finDuGame=0
+cptMarge=0
+marge=12
+ # sub finDuGreen
+ 
+ 
+ sub finDuGreen
+ nombre_lu= bit5+2*bit6+4*bit7
+ 	
+ L[4]=32
+ L[5]=32*bit5
+ L[6]=32*bit6
+ L[7]=32*bit7
+ 
+	if nombre_lu==0 or nombre_lu==7  then
+		call leds.top(0,0,0)
+		angle=0
+		tmpRotation=0
+		rotation=2
+	end
+	
+	if nombre_lu==1  then
+					call leds.top(25,25,0) #jaune
+					angle=45		
+     ###########
+	s=100 
+	tmpRotation=10 
+	rotation=1
+		
+		##########
+	end	
+		
+	if nombre_lu==2   then		#magenta
+		call leds.top(32,0,15)
+				angle=-45		
+	##############
+	s=100 
+	tmpRotation=10
+	rotation=2	    	
+			########
+	end
+			
+		
+	if nombre_lu==3 then		#rouge
+		call leds.top(32,0,0)
+		angle=90
+		
+		##############
+			s=100
+			tmpRotation=20	
+			rotation=1
+			########
+	end
+	
+	if nombre_lu==4    then		#cyan
+		call leds.top(0,20,25)
+		angle=-90
+	
+		##############
+		s=100
+		tmpRotation=23	
+		rotation=2
+			########
+	end
+	
+	if nombre_lu==5   then
+		call leds.top(0,32,0)		#vert 
+		angle=120
+		##############
+		    s=100
+	    	tmpRotation=30
+			rotation=1
+			########
+	end
+		
+	if nombre_lu==6   then #bleu 
+		call leds.top(0,0,32)
+		angle=-120
+		##############
+		s=100
+		tmpRotation=30
+		rotation=2
+			########
+	end	
+	
+	 
+#########################fin sub finDuGreen
+
+ 
+ 
+############################         sub allumer  
+sub allumer 
+nombre_lu=bit1+2*bit2+4*bit3 
+#*
+distance=nombre_lu*10       #la distance = nombre_lu*10
+vitesseRéel=300/32
+chrono=distance*10/vitesseRéel  
+*#
+distance=nombre_lu*10 
+chrono=(100*distance)/(32*VitesseDeFrappe)
+
+ L[0]=32 
+ L[1]=32*bit1
+ L[2]=32*bit2
+ L[3]=32*bit3
+
+	vitesse=800
+	vitesseR=50 
+	if nombre_lu==0 or nombre_lu==7 then
+		call leds.top(0,0,0)
+	end
+	
+	if nombre_lu==1 then
+		call leds.top(25,25,0) #jaune
+	end	
+		
+	if nombre_lu==2 then		#magenta
+		call leds.top(32,0,15)
+	end
+	
+	if nombre_lu==3 then		#rouge
+		call leds.top(32,0,0)
+	end
+		
+	if nombre_lu==4 then		#cyan
+		call leds.top(0,20,25)
+	end
+	
+	if nombre_lu==5 then
+		call leds.top(0,32,0)		#vert 
+	end
+		
+	if nombre_lu==6 then #bleu 
+		call leds.top(0,0,32)
+	end	
+#######fin sub allumer
+
+
+
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^#
+onevent prox 
+
+call leds.circle(L[0],L[1],L[2],L[3],L[4],L[5],L[6],L[7])
+val=prox.ground.delta[0]
+val1=prox.ground.delta[1]
+
+###  si on est dans le gris idéal 
+	if val>proxInf and val <proxSup and finSuiviDeLigne==0  then
+		etat=2 #faire le suivi de ligne	
+	end 
+		
+### et on lit les codes barres simultanément:
+ 
+	 if  lecture>tmpCode and numAmorce==1 then  #10 cm atteints en tmpCode*10ms  code lu 
+		  lecture=0  #remettre le compteur à 0
+	 	  amorce=0
+	 	   #c'est le premier code qui vient d'etre lu
+		   callsub allumer #allumer aprés la lecture du code et tracer au 2eme code
+		
+ 
+	  elseif  numAmorce==2  then  #deuxieme code LU
+							lecture=0
+							amorce=0
+							finSuiviDeLigne=1
+							if cptMarge<marge then
+											cptMarge++
+											etat=4
+										else
+									callsub finDuGreen
+											#*	if rotation==0 then
+												etat=3
+												end 	*#
+												if finDuGame==1 then
+													etat=1
+												end
+						    end
+					end
+					
+	if  val1<900   and   lecture==0 and  numAmorce==1  then 
+	#on est dans le noir et y a pas de code en cours alors c'est un nouveau code 
+	 #c'est le deuxieme 
+				amorce=2  
+				
+			elseif val1<900   and   lecture==0 and  numAmorce==0 then
+				amorce=1   #1er amorce 
+	end
+
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^#	
+	
+############################# if amorce==1	 lire le premier code barre
+if  amorce==1 and cptMarge==0 then  #si nouvel amorce alors 	
+	vitesse=100
+	vitesseR=45
+	lecture++  #on déclenche le compteur du temps 
+	 
+	
+		if lecture==3 then           #premiere case 
+				bit1=0 bit2 =0 bit3=0 
+		end
+	
+		if  lecture ==tmpBit1 then  #si le temps est egal a tmpBit1 le robot est dans le 1er bit de valeurs 	
+				if val1>900 then  #on pioche la valeur du bit1 	
+						bit1=0  # blanc		
+					else 
+						bit1=1 # noir
+				end
+		end	
+	
+		if  lecture ==tmpBit2 then  #le robot est sur le bit2	
+				if val1>900 then
+					    bit2=0      	
+			       else 
+					    bit2=1
+			    end
+		end
+			
+		if  lecture ==tmpBit3 then  #le robot est sur le bit3			
+				if val1>900 then				
+				   	    bit3=0 
+				    else 
+		   				bit3=1
+				end
+		end
+	
+				if lecture==tmpCode+2 then
+					numAmorce=1
+				end
+end					
+ emit bits[bit1,bit2,bit3]
+######################### if amorce==2  lire le deuxième code barre
+ if  amorce==2 and cptMarge==0 then  # deuxieme amorce alors 	
+	vitesse=100
+	vitesseR=45
+	lecture++  #on déclenche le compteur du temps 
+
+		if lecture==3 then           #amorce 2 
+				bit5=0 bit6 =0 bit7=0 
+		end
+	
+		if  lecture ==tmpBit1 then  #si le temps est egal a tmpBit1 le robot est dans le 1er bit de valeurs 			
+				if val1>900 then  #on pioche la valeur du bit5 	
+						bit5=0  # blanc					
+					else 
+						bit5=1 # noir
+				end
+		end	
+	
+		if  lecture ==tmpBit2 then  #le robot est sur le bit6
+				if val1>900 then
+					    bit6=0  
+			       else 
+					    bit6=1
+			    end
+		end
+			
+		if  lecture ==tmpBit3 then  #le robot est sur le bit7
+				if val1>900 then
+				   	    bit7=0 					
+				    else 
+		   				bit7=1
+				end
+		end
+		
+		if lecture>tmpBit3 then
+					numAmorce=2
+				end		
+end					
+ ################## end if amorce==2
+ 
+emit bits22[bit5 ,bit6 ,bit7 ]
+	
+
+####################################  suivi de ligne 
+if  etat==2 then  #faire le suivi de ligne
+	
+	if  val > 	proxSup	then     # trop claire, aller à gauche
+			motor.left.target	 =	-vitesseR
+			motor.right.target = vitesseR
+		   # call leds.circle(0,0,0,0,0,0,32,32)
+			tmp=0 ####   si ca tourne on arrete de compter 
+			if lecture>0 then
+				tmp-- 
+				lecture=lecture+tmp
+			end
+		
+		elseif 	 val <   proxInf  	 then  # trop sombre, aller à droite 
+			motor.left.target	 =	 vitesseR #50
+			motor.right.target =   -vitesseR
+		    #call leds.circle(0,32,32,0,0,0,0,0)
+			tmp=0####si ca tourne on arrete de compter 
+			if lecture>0 then
+				tmp-- 
+				lecture=lecture+tmp
+			end
+			
+		else 
+			motor.left.target	 =vitesse	#280
+			motor.right.target =  vitesse
+			#call leds.circle(32,32,0,0,0,0,0,32)
+	end
+end
+########################### fin suivi de ligne
+
+
+#^^^^^^^^^^^^^^^^^^^^^^^^^ ETATS: 
+	 if etat==1 then					#etat arret
+			motor.left.target	 =	0
+			motor.right.target = 0
+	end
+	
+	if etat==3  then				#etat va taper la balle
+		motor.left.target=VitesseDeFrappe
+	   motor.right.target=VitesseDeFrappe
+	   if k<chrono then  #pendant chrono
+	   	k++
+	   else finDuGame=1
+	   end
+		
+		
+	end
+
+	if  etat==4 then				#etat demarrage button.forward
+		motor.left.target=300
+	   motor.right.target=300	   
+		call leds.bottom.left(0,32,0)
+		call leds.bottom.right(0,32,0)
+		
+	end
+
+if etat!=4 then
+	call leds.bottom.left(0,0,0)
+		call leds.bottom.right(0,0,0)
+end
+	if etat==5 then   #etat tourner a gauche if button.left
+		 motor.left.target = - 60	 
+	 motor.right.target = 60	 
+	 call leds.top(10,0,30)
+	end
+
+	if rotation==1 then  ###		tourner pendant j*0.01s
+	
+				 if j<tmpRotation then    #angle positif tourne à droite
+							rotation=1
+							j++ 
+     						motor.left.target=s
+							motor.right.target=-s
+					 elseif j==tmpRotation   then	#va taper la balle
+								    etat=3
+								  
+				  end  
+	end
+		
+	if rotation==2 then	#angle négatif tourne à gauche
+	   	    
+			if j<tmpRotation then	
+					 
+						j++
+						motor.left.target=-s
+						motor.right.target=s
+					elseif j==tmpRotation  then	#va taper la balle
+			    	etat=3
+			    	 
+				end	       
+	end
+	
+
+	
+#commandes manuelles :
+onevent button.forward    #marche avant 		
+		etat=4 #demarrage
+		
+onevent button.center #arret manuel
+	callsub initialisation 
+
+onevent button.left #tourner vers la gauche
+    etat=5
+
+onevent button.right #tourner vers la droite   
+     motor.left.target =  200     
+     motor.right.target = -  200		
+	 call leds.top(10,0,30)	
+		
+onevent button.backward #marche arrière
+     motor.left.target =  -300	 
+	 motor.right.target = - 300]]></node>
+
+
+</network>
